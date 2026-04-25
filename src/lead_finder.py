@@ -28,6 +28,7 @@ TARGET_TITLE_KEYWORDS = (
     "devops",
 )
 TARGET_SKILL_KEYWORDS = ("cassandra", "nosql", "distributed systems", "kubernetes")
+CURATED_HIGH_PRIORITY_SOURCES = {"real_csv", "gemini_generated_unverified"}
 
 
 def load_candidates(candidates_path: Path) -> list[LeadCandidate]:
@@ -113,6 +114,10 @@ def load_candidates_from_source(
 
 
 def score_lead(candidate: LeadCandidate) -> tuple[int, str]:
+    source_value = candidate.source.strip().lower()
+    if source_value in CURATED_HIGH_PRIORITY_SOURCES or source_value.startswith("favikon"):
+        return 100, "curated high-priority lead source"
+
     score = 0
     reasons: list[str] = []
 

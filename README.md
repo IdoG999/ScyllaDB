@@ -53,6 +53,19 @@ pip install -r requirements.txt
 
 ## How To Run
 
+Recommended final run order (assignment demo):
+```bash
+# 1) (Optional) Auto-generate candidate rows with Gemini
+export GEMINI_API_KEY="your_gemini_api_key"
+python3 scripts/fetch_leads_from_gemini.py --count 20 --country Israel --model gemini-2.0-flash --output data/real_linkedin_candidates.csv
+
+# 2) Run GTM workflow with real CSV source in dry-run mode
+python3 -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --top-n 20 --threshold 60 --llm-mode mock
+
+# 3) Export report for the latest run id printed in step 2
+python3 -m src.main report --run-id <latest_run_id> --output-path output/report_final.md
+```
+
 Initialize database:
 ```bash
 python -m src.main init-db
@@ -64,6 +77,17 @@ python -m src.main run --dry-run --threshold 60 --top-n 3 --lead-source mock_fil
 ```
 
 Run with real profiles from CSV (you provide real LinkedIn rows):
+```bash
+python -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --top-n 20
+```
+
+Fully automated CSV generation via Gemini (writes directly to CSV format):
+```bash
+export GEMINI_API_KEY="your_gemini_api_key"
+python3 scripts/fetch_leads_from_gemini.py --count 20 --country Israel --model gemini-2.0-flash --output data/real_linkedin_candidates.csv
+```
+
+Then run the pipeline:
 ```bash
 python -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --top-n 20
 ```
@@ -102,6 +126,7 @@ LINKEDIN_OWNER_URN=urn:li:sponsoredAccount:123456789
 LINKEDIN_LEAD_TYPE=SPONSORED
 LINKEDIN_VERSION=202604
 OPENAI_API_KEY=your_openai_api_key
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 CSV format for `data/real_linkedin_candidates.csv`:
