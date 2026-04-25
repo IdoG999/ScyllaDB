@@ -1,8 +1,8 @@
-# GTM Hunter Run Report (run_id=20)
+# GTM Hunter Run Report (run_id=21)
 
 ## Summary
-- Started: 2026-04-25T14:50:44.606179+00:00
-- Finished: 2026-04-25T14:50:44.625472+00:00
+- Started: 2026-04-25T14:51:31.270451+00:00
+- Finished: 2026-04-25T14:51:31.289238+00:00
 - Leads discovered: 20
 - Leads selected: 20
 - Messages generated: 40
@@ -71,9 +71,9 @@
   - Profile: https://linkedin.com
 
 ## Message Drafts
-- lead_id=172 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=192 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Maor, noticed your Founder & CEO role at Base44. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=172 | channel=email_followup | status=dry_run_sent
+- lead_id=192 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Maor,
@@ -93,9 +93,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=173 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=193 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Luiza, noticed your CEO role at AI Tech & Privacy Academy. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=173 | channel=email_followup | status=dry_run_sent
+- lead_id=193 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Luiza,
@@ -115,9 +115,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=174 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=194 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Denis, noticed your Cybersecurity Executive role at Various. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=174 | channel=email_followup | status=dry_run_sent
+- lead_id=194 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Denis,
@@ -137,9 +137,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=175 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=195 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Gal, noticed your CEO role at Aligned. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=175 | channel=email_followup | status=dry_run_sent
+- lead_id=195 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Gal,
@@ -159,9 +159,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=176 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=196 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Yoseph, noticed your CEO role at Together Vouch For Each Other. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=176 | channel=email_followup | status=dry_run_sent
+- lead_id=196 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Yoseph,
@@ -181,9 +181,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=177 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=197 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Emil, noticed your CEO & Founder role at Emil Rozenblat Ltd. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=177 | channel=email_followup | status=dry_run_sent
+- lead_id=197 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Emil,
@@ -203,9 +203,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=178 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=198 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Alex, noticed your CEO & Co-Founder role at Deel. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=178 | channel=email_followup | status=dry_run_sent
+- lead_id=198 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Alex,
@@ -225,9 +225,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=179 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=199 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Adir, noticed your Senior AI Engineer role at Elementor. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=179 | channel=email_followup | status=dry_run_sent
+- lead_id=199 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Adir,
@@ -247,9 +247,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=180 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=200 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Guy, noticed your Founding Partner role at Fusion VC. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=180 | channel=email_followup | status=dry_run_sent
+- lead_id=200 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Guy,
@@ -269,9 +269,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=181 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=201 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Dov, noticed your CEO & Founder role at Yad L'Olim. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=181 | channel=email_followup | status=dry_run_sent
+- lead_id=201 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Dov,
@@ -291,9 +291,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=182 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=202 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Amitay, noticed your AI Lecturer role at Freelance. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=182 | channel=email_followup | status=dry_run_sent
+- lead_id=202 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Amitay,
@@ -313,9 +313,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=183 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=203 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Dovi, noticed your Founding Partner role at Group 11. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=183 | channel=email_followup | status=dry_run_sent
+- lead_id=203 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Dovi,
@@ -335,9 +335,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=184 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=204 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Sarah, noticed your Head of Partnerships role at Wix. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=184 | channel=email_followup | status=dry_run_sent
+- lead_id=204 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Sarah,
@@ -357,9 +357,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=185 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=205 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Dr., noticed your Keynote Speaker & Lecturer role at Various. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=185 | channel=email_followup | status=dry_run_sent
+- lead_id=205 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Dr.,
@@ -379,9 +379,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=186 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=206 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Eran, noticed your Founder role at G^Team. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=186 | channel=email_followup | status=dry_run_sent
+- lead_id=206 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Eran,
@@ -401,9 +401,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=187 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=207 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Yuval, noticed your Head of Google for Startups role at Google. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=187 | channel=email_followup | status=dry_run_sent
+- lead_id=207 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Yuval,
@@ -423,9 +423,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=188 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=208 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Hagai, noticed your Brand Strategist role at Various. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=188 | channel=email_followup | status=dry_run_sent
+- lead_id=208 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Hagai,
@@ -445,9 +445,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=189 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=209 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Lena, noticed your Communication Therapist role at Freelance. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=189 | channel=email_followup | status=dry_run_sent
+- lead_id=209 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Lena,
@@ -467,9 +467,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=190 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=210 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Ahmad, noticed your CEO role at Mind Prevention GmbH. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=190 | channel=email_followup | status=dry_run_sent
+- lead_id=210 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Ahmad,
@@ -489,9 +489,9 @@ You are a GTM outreach assistant.
 
 Given a lead profile, generate:
 1. A concise LinkedIn...]
-- lead_id=191 | channel=linkedin_invite | status=dry_run_sent
+- lead_id=211 | channel=linkedin_invite | status=dry_run_sent
   - Body: Hi Shay, noticed your Owner role at Lab17.ai. I work with teams optimizing high-throughput distributed workloads and thought it could be useful to compare notes on migration patterns and latency trade-offs.
-- lead_id=191 | channel=email_followup | status=dry_run_sent
+- lead_id=211 | channel=email_followup | status=dry_run_sent
   - Body: Subject: Quick idea for your distributed data stack
 
 Hi Shay,

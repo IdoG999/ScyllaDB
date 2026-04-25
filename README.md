@@ -53,6 +53,31 @@ pip install -r requirements.txt
 
 ## How To Run
 
+### Correct Run (Recommended)
+
+Use this exact order for a clean assignment demo:
+
+```bash
+# 0) (Optional) clean old mock rows
+python3 -m src.main purge-mock
+
+# 1) Generate 20 candidate rows automatically (or edit CSV manually)
+export GEMINI_API_KEY="your_gemini_api_key"
+python3 scripts/fetch_leads_from_gemini.py --count 20 --country Israel --model gemini-2.0-flash --output data/real_linkedin_candidates.csv
+
+# 2) Run hunter workflow in dry-run mode
+python3 -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --top-n 20 --threshold 60 --llm-mode mock
+
+# 3) Export final report using run id printed in step 2
+python3 -m src.main report --run-id <latest_run_id> --output-path output/report_final.md
+```
+
+Expected success indicators:
+- report shows `Leads discovered > 0`
+- report shows `Leads selected > 0`
+- report shows `Messages generated > 0`
+- `data/hunter.db` includes records in `runs`, `leads`, `messages`
+
 Recommended final run order (assignment demo):
 ```bash
 # 1) (Optional) Auto-generate candidate rows with Gemini
