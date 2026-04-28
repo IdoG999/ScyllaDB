@@ -23,6 +23,28 @@ def build_report_markdown(connection: sqlite3.Connection, run_id: int) -> str:
     lines.append(f"- Messages marked sent (dry-run): {run_row['sent_count']}")
     lines.append("")
 
+    selected_rows = [lead for lead in lead_rows if bool(lead["selected"])]
+    source_counts: dict[str, int] = {}
+    for lead in lead_rows:
+        source = str(lead["source"])
+        source_counts[source] = source_counts.get(source, 0) + 1
+
+    lines.append("## Source Breakdown")
+    for source, count in sorted(source_counts.items(), key=lambda item: item[1], reverse=True):
+        lines.append(f"- {source}: {count}")
+    lines.append("")
+
+    lines.append("## Selected Leads")
+    for lead in selected_rows:
+        lines.append(
+            f"- {lead['full_name']} | {lead['title']} @ {lead['current_company']} | "
+            f"score={lead['relevance_score']} | source={lead['source']}"
+        )
+        lines.append(f"  - Why selected: {lead['reason']}")
+    if not selected_rows:
+        lines.append("- None selected")
+    lines.append("")
+
     lines.append("## Leads")
     for lead in lead_rows:
         lines.append(

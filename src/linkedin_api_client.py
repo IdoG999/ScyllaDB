@@ -19,6 +19,7 @@ class LinkedInApiError(RuntimeError):
 @dataclass(frozen=True)
 class LinkedInApiConfig:
     api_key: str
+    provider: str = "proxycurl"
     country: str = "Israel"
     limit: int = 20
 
@@ -52,29 +53,73 @@ def _build_proxycurl_search_url(country: str, limit: int) -> str:
     return f"https://nubela.co/proxycurl/api/linkedin/search/person?{urlencode(params)}"
 
 
+def _build_linkdapi_search_url(country: str, limit: int) -> str:
+    params = {
+        "country": country,
+        "current_company": "DataStax",
+        "keyword_title": "engineer OR architect OR platform OR database OR devops",
+        "keyword_skills": "Cassandra OR NoSQL OR distributed systems",
+        "count": str(limit),
+    }
+    return f"https://linkdapi.com/api/v1/search/people?{urlencode(params)}"
+
+
+def _extract_results(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    if isinstance(payload.get("results"), list):
+        return payload["results"]
+    if isinstance(payload.get("profiles"), list):
+        return payload["profiles"]
+    data = payload.get("data")
+    if isinstance(data, dict):
+        if isinstance(data.get("results"), list):
+            return data["results"]
+        if isinstance(data.get("profiles"), list):
+            return data["profiles"]
+        if isinstance(data.get("items"), list):
+            return data["items"]
+    if isinstance(data, list):
+        return data
+    return []
+
+
 def fetch_real_candidates_from_api(config: LinkedInApiConfig) -> list[LeadCandidate]:
-    url = _build_proxycurl_search_url(country=config.country, limit=config.limit)
-    request = Request(
-        url=url,
-        headers={
+    provider = config.provider.strip().lower()
+    if provider == "proxycurl":
+        url = _build_proxycurl_search_url(country=config.country, limit=config.limit)
+        headers = {
             "Authorization": f"Bearer {config.api_key}",
             "Accept": "application/json",
-        },
+        }
+    elif provider == "linkdapi":
+        url = _build_linkdapi_search_url(country=config.country, limit=config.limit)
+        headers = {
+            "X-linkdapi-apikey": config.api_key,
+            "Accept": "application/json",
+        }
+    else:
+        raise LinkedInApiError("Unsupported LINKEDIN_DATA_PROVIDER. Use 'proxycurl' or 'linkdapi'.")
+
+    request = Request(
+        url=url,
+        headers=headers,
         method="GET",
     )
     try:
         with urlopen(request, timeout=30) as response:
             payload: dict[str, Any] = json.loads(response.read().decode("utf-8"))
     except HTTPError as exc:
+        if provider == "proxycurl" and exc.code == 410:
+            raise LinkedInApiError(
+                "Proxycurl endpoint returned HTTP 410 (service deprecated). "
+                "Set LINKEDIN_DATA_PROVIDER=linkdapi and LINKEDIN_DATA_API_KEY to use the maintained API path."
+            ) from exc
         raise LinkedInApiError(
-            f"LinkedIn data API request failed with HTTP {exc.code}. "
-            "Verify API key/plan and request filters."
+            f"{provider} request failed with HTTP {exc.code}. Verify API key/plan and request filters."
         ) from exc
     except URLError as exc:
-        raise LinkedInApiError(f"LinkedIn data API network error: {exc}") from exc
+        raise LinkedInApiError(f"{provider} network error: {exc}") from exc
 
-    # Typical Proxycurl response has either "results" or "profiles" style arrays depending on endpoint flavor.
-    raw_results = payload.get("results") or payload.get("profiles") or []
+    raw_results = _extract_results(payload)
     candidates: list[LeadCandidate] = []
 
     for item in raw_results[: config.limit]:
@@ -116,10 +161,11 @@ def fetch_real_candidates_from_api(config: LinkedInApiConfig) -> list[LeadCandid
 def load_api_config_from_env(country: str, limit: int) -> LinkedInApiConfig:
     _load_local_env_file()
     api_key = os.getenv("LINKEDIN_DATA_API_KEY", "").strip()
+    provider = os.getenv("LINKEDIN_DATA_PROVIDER", "proxycurl").strip().lower()
     if not api_key:
         raise LinkedInApiError(
             "Missing LINKEDIN_DATA_API_KEY. "
             "Set it (or place it in .env) and rerun with --lead-source third_party_api, "
             "or pass --allow-mock-fallback."
         )
-    return LinkedInApiConfig(api_key=api_key, country=country, limit=limit)
+    return LinkedInApiConfig(api_key=api_key, provider=provider, country=country, limit=limit)

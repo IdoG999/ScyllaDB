@@ -49,28 +49,47 @@ def load_prompt_template(prompt_path: Path) -> str:
 
 
 def generate_messages_with_mock_llm(scored_lead: ScoredLead, prompt_template: str) -> PersonalizedMessages:
+    _ = prompt_template
     first_name = scored_lead.candidate.full_name.split()[0]
     company = scored_lead.candidate.current_company
     title = scored_lead.candidate.title
     signals = scored_lead.reason
+    technical_context = " ".join(
+        [
+            scored_lead.candidate.headline.lower(),
+            title.lower(),
+            " ".join(scored_lead.candidate.skills).lower(),
+            scored_lead.candidate.summary.lower(),
+        ]
+    )
+
+    if "devops" in technical_context or "sre" in technical_context or "kubernetes" in technical_context:
+        value_prop = "reducing operational toil in high-write distributed clusters"
+        asset = "an infra-focused migration checklist (K8s + autoscaling guardrails)"
+    elif "architect" in technical_context or "principal" in technical_context or "staff" in technical_context:
+        value_prop = "de-risking architecture choices for latency-sensitive workloads"
+        asset = "a short architecture decision framework for Cassandra-to-Scylla evaluations"
+    elif "backend" in technical_context or "engineer" in technical_context:
+        value_prop = "improving p99 latency without forcing major application rewrites"
+        asset = "a practical benchmark template used by backend teams"
+    else:
+        value_prop = "mapping datastore options for throughput-heavy applications"
+        asset = "a concise technical evaluation worksheet"
 
     linkedin_invite = (
         f"Hi {first_name}, noticed your {title} role at {company}. "
-        "I work with teams optimizing high-throughput distributed workloads and thought it "
-        "could be useful to compare notes on migration patterns and latency trade-offs."
+        f"We help teams with {value_prop}; open to a quick comparison chat on what has worked in your stack?"
     )
 
     email_followup = (
-        f"Subject: Quick idea for your distributed data stack\n\n"
+        f"Subject: {first_name}, quick thought on {company}'s data stack\n\n"
         f"Hi {first_name},\n\n"
-        f"I came across your profile while researching teams with strong Cassandra and "
-        f"distributed systems ownership ({signals}).\n\n"
-        "If reducing p99 latency and infra overhead is on your roadmap, I can share a short "
-        "playbook that teams use when evaluating alternatives.\n\n"
-        "Worth a 15-minute exchange next week?\n\n"
+        f"I reached out because your profile shows strong relevance to distributed data platforms ({signals}).\n\n"
+        f"If {value_prop} is a current priority, I can send {asset}.\n\n"
+        "No deck, just practical notes your team can reuse internally.\n\n"
+        "Would a 15-minute exchange next week be useful?\n\n"
         "Best,\n"
-        "ScyllaDB GTM Team\n\n"
-        f"[Prompt context used: {prompt_template[:120]}...]"
+        "ScyllaDB GTM Team"
     )
 
     return PersonalizedMessages(linkedin_invite=linkedin_invite, email_followup=email_followup)

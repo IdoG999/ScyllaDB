@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from src.db import get_connection, init_db, purge_mock_leads
+from src.lead_finder import identify_relevant_leads, load_candidates_from_source
 from src.report import build_report_markdown, write_report
 from src.workflow import run_hunter_workflow
 
@@ -12,7 +13,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="GTM Hunter PoC CLI")
     parser.add_argument(
         "command",
-        choices=("init-db", "run", "report", "purge-mock"),
+        choices=("init-db", "run", "report", "purge-mock", "verify-source"),
         help="Command to execute",
     )
     parser.add_argument("--db-path", default="data/hunter.db", help="SQLite database path")
@@ -117,6 +118,27 @@ def main() -> None:
             deleted_leads, deleted_messages = purge_mock_leads(connection)
             print(f"Deleted mock leads: {deleted_leads}")
             print(f"Deleted mock messages: {deleted_messages}")
+            return
+
+        if args.command == "verify-source":
+            candidates = load_candidates_from_source(
+                lead_source=args.lead_source,
+                candidates_path=Path(args.candidates_path),
+                country=args.country,
+                limit=args.limit,
+                allow_mock_fallback=args.allow_mock_fallback,
+            )
+            scored = identify_relevant_leads(candidates, threshold=args.threshold)
+            selected = [lead for lead in scored if lead.selected]
+            print(f"Candidates fetched: {len(candidates)}")
+            print(f"Candidates selected with threshold {args.threshold}: {len(selected)}")
+            for lead in scored[: min(10, len(scored))]:
+                print(
+                    f"- {lead.candidate.full_name} | {lead.candidate.title} @ {lead.candidate.current_company} "
+                    f"| score={lead.relevance_score} | selected={lead.selected}"
+                )
+                print(f"  reason={lead.reason}")
+            return
     finally:
         connection.close()
 
