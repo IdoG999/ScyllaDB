@@ -19,16 +19,73 @@ from src.models import LeadCandidate, ScoredLead
 
 TARGET_COMPANY = "datastax"
 TARGET_TITLE_KEYWORDS = (
+    "cassandra",
     "database",
-    "data",
     "platform",
     "backend",
     "architect",
     "engineer",
     "devops",
+    "sre",
+    "site reliability",
+    "principal",
+    "staff",
 )
-TARGET_SKILL_KEYWORDS = ("cassandra", "nosql", "distributed systems", "kubernetes")
-CURATED_HIGH_PRIORITY_SOURCES = {"real_csv", "gemini_generated_unverified"}
+TARGET_SKILL_KEYWORDS = (
+    "cassandra",
+    "scylladb",
+    "nosql",
+    "distributed systems",
+    "distributed databases",
+    "kubernetes",
+)
+TARGET_SUMMARY_KEYWORDS = (
+    "cassandra",
+    "scylladb",
+    "nosql",
+    "distributed",
+    "low latency",
+    "high throughput",
+    "database performance",
+)
+NON_TECH_TITLE_KEYWORDS = (
+    "influencer",
+    "activist",
+    "psychologist",
+    "therapist",
+    "marketer",
+    "partnerships",
+    "venture",
+    "investor",
+    "lecturer",
+    "speaker",
+)
+
+
+def _passes_icp_gate(candidate: LeadCandidate) -> bool:
+    text = " ".join(
+        [
+            candidate.current_company.lower(),
+            candidate.title.lower(),
+            candidate.headline.lower(),
+            " ".join(candidate.skills).lower(),
+            candidate.summary.lower(),
+        ]
+    )
+    has_company_signal = TARGET_COMPANY in candidate.current_company.lower()
+    has_domain_signal = any(keyword in text for keyword in ("cassandra", "nosql", "distributed", "scylladb"))
+    has_technical_role = any(keyword in text for keyword in ("engineer", "architect", "devops", "sre", "platform", "database", "backend"))
+    has_non_tech_flag = any(keyword in text for keyword in NON_TECH_TITLE_KEYWORDS)
+    normalized_profile = candidate.profile_url.lower().strip()
+    has_profile_url = "linkedin.com/in/" in normalized_profile
+    source_value = candidate.source.lower().strip()
+    unverified_source = any(marker in source_value for marker in ("unverified", "generated", "favikon"))
+    return (
+        (has_company_signal or (has_domain_signal and has_technical_role))
+        and not has_non_tech_flag
+        and has_profile_url
+        and not unverified_source
+    )
 
 
 def load_candidates(candidates_path: Path) -> list[LeadCandidate]:
@@ -114,38 +171,53 @@ def load_candidates_from_source(
 
 
 def score_lead(candidate: LeadCandidate) -> tuple[int, str]:
-    source_value = candidate.source.strip().lower()
-    if source_value in CURATED_HIGH_PRIORITY_SOURCES or source_value.startswith("favikon"):
-        return 100, "curated high-priority lead source"
-
     score = 0
     reasons: list[str] = []
+    lowered_title = candidate.title.lower()
+    lowered_headline = candidate.headline.lower()
+    lowered_summary = candidate.summary.lower()
+    candidate_skills = " ".join(candidate.skills).lower()
 
     if TARGET_COMPANY in candidate.current_company.lower():
         score += 50
         reasons.append("works at DataStax")
 
-    lowered_title = candidate.title.lower()
-    title_hits = [kw for kw in TARGET_TITLE_KEYWORDS if kw in lowered_title]
+    title_space = f"{lowered_title} {lowered_headline}"
+    title_hits = [kw for kw in TARGET_TITLE_KEYWORDS if kw in title_space]
     if title_hits:
         score += min(25, 8 * len(title_hits))
         reasons.append(f"title match: {', '.join(title_hits)}")
 
-    candidate_skills = " ".join(candidate.skills).lower()
     skill_hits = [kw for kw in TARGET_SKILL_KEYWORDS if kw in candidate_skills]
     if skill_hits:
-        score += min(20, 5 * len(skill_hits))
+        score += min(25, 6 * len(skill_hits))
         reasons.append(f"skills match: {', '.join(skill_hits)}")
 
-    if "cassandra" in candidate.summary.lower():
-        score += 5
-        reasons.append("summary mentions Cassandra")
+    summary_hits = [kw for kw in TARGET_SUMMARY_KEYWORDS if kw in lowered_summary]
+    if summary_hits:
+        score += min(15, 4 * len(summary_hits))
+        reasons.append(f"summary match: {', '.join(summary_hits)}")
+
+    # Explicitly require domain relevance to avoid selecting generic influencers.
+    domain_hit_count = len(set(skill_hits)) + len(set(summary_hits))
+    if TARGET_COMPANY in candidate.current_company.lower() and domain_hit_count:
+        score += 10
+        reasons.append("company + domain alignment")
+    elif domain_hit_count >= 2:
+        score += 10
+        reasons.append("strong domain alignment")
 
     if candidate.source == "linkedin_lead_sync":
-        score += 70
+        score += 20
         reasons.append("real LinkedIn lead form submitter")
 
-    return min(score, 100), "; ".join(reasons) if reasons else "no clear target signals"
+    non_tech_hits = [kw for kw in NON_TECH_TITLE_KEYWORDS if kw in title_space]
+    if non_tech_hits:
+        score -= min(30, 10 * len(non_tech_hits))
+        reasons.append(f"non-ICP title signal: {', '.join(non_tech_hits)}")
+
+    bounded_score = max(0, min(score, 100))
+    return bounded_score, "; ".join(reasons) if reasons else "no clear target signals"
 
 
 def identify_relevant_leads(candidates: list[LeadCandidate], threshold: int) -> list[ScoredLead]:
@@ -157,7 +229,7 @@ def identify_relevant_leads(candidates: list[LeadCandidate], threshold: int) -> 
                 candidate=candidate,
                 relevance_score=score,
                 reason=reason,
-                selected=score >= threshold,
+                selected=score >= threshold and _passes_icp_gate(candidate),
             )
         )
     return sorted(scored, key=lambda item: item.relevance_score, reverse=True)

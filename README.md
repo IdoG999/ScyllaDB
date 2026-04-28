@@ -61,9 +61,8 @@ Use this exact order for a clean assignment demo:
 # 0) (Optional) clean old mock rows
 python3 -m src.main purge-mock
 
-# 1) Generate 20 candidate rows automatically (or edit CSV manually)
-export GEMINI_API_KEY="your_gemini_api_key"
-python3 scripts/fetch_leads_from_gemini.py --count 20 --country Israel --model gemini-2.0-flash --output data/real_linkedin_candidates.csv
+# 1) Verify source quality and scoring behavior first
+python3 -m src.main verify-source --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --threshold 60 --limit 20
 
 # 2) Run hunter workflow in dry-run mode
 python3 -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --top-n 20 --threshold 60 --llm-mode mock
@@ -80,9 +79,8 @@ Expected success indicators:
 
 Recommended final run order (assignment demo):
 ```bash
-# 1) (Optional) Auto-generate candidate rows with Gemini
-export GEMINI_API_KEY="your_gemini_api_key"
-python3 scripts/fetch_leads_from_gemini.py --count 20 --country Israel --model gemini-2.0-flash --output data/real_linkedin_candidates.csv
+# 1) Verify leads fetched/scored from your chosen source
+python3 -m src.main verify-source --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --threshold 60 --limit 20
 
 # 2) Run GTM workflow with real CSV source in dry-run mode
 python3 -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --top-n 20 --threshold 60 --llm-mode mock
@@ -106,14 +104,15 @@ Run with real profiles from CSV (you provide real LinkedIn rows):
 python -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --top-n 20
 ```
 
-Fully automated CSV generation via Gemini (writes directly to CSV format):
+Generate CSV candidates via Gemini (unverified; use only as draft input and verify before run):
 ```bash
 export GEMINI_API_KEY="your_gemini_api_key"
 python3 scripts/fetch_leads_from_gemini.py --count 20 --country Israel --model gemini-2.0-flash --output data/real_linkedin_candidates.csv
 ```
 
-Then run the pipeline:
+Then verify + run the pipeline:
 ```bash
+python -m src.main verify-source --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --threshold 60 --limit 20
 python -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --top-n 20
 ```
 
@@ -131,6 +130,7 @@ python -m src.main run --dry-run --llm-mode openai --allow-llm-mock-fallback
 Run with real LinkedIn leads from a third-party API (top 20 from Israel):
 ```bash
 export LINKEDIN_DATA_API_KEY="your_api_key_here"
+export LINKEDIN_DATA_PROVIDER="linkdapi"  # recommended. proxycurl may return HTTP 410 (deprecated)
 python -m src.main run --dry-run --lead-source third_party_api --country Israel --limit 20 --top-n 20
 ```
 
@@ -146,6 +146,7 @@ python -m src.main run --dry-run --lead-source linkedin_lead_sync --limit 20 --t
 You can also place credentials in a local `.env` file (auto-loaded by the API client):
 ```bash
 LINKEDIN_DATA_API_KEY=your_api_key_here
+LINKEDIN_DATA_PROVIDER=linkdapi
 LINKEDIN_ACCESS_TOKEN=your_oauth_access_token
 LINKEDIN_OWNER_URN=urn:li:sponsoredAccount:123456789
 LINKEDIN_LEAD_TYPE=SPONSORED
@@ -173,6 +174,13 @@ Generate report for a specific run:
 python -m src.main report --run-id <latest_run_id> --output-path output/report_final.md
 ```
 
+Validate source quality and scoring only (no DB writes):
+```bash
+python -m src.main verify-source --lead-source third_party_api --country Israel --limit 20 --threshold 60
+```
+
+If `LINKEDIN_DATA_PROVIDER=proxycurl` returns HTTP 410, switch to `linkdapi`.
+
 ## Expected Output Example
 
 During dry-run:
@@ -183,11 +191,28 @@ During dry-run:
   - `messages`
 - `output/report_latest.md` and `output/example_report.md` are generated.
 - Lead entries in reports include their `source` (`real_csv`, `linkedin_lead_sync`, `third_party_api`, or `linkedin_mock_api`).
+- Report includes source breakdown and selected-lead rationale.
+
+## Run Logs and Evidence
+
+- Final handoff report artifact: `output/report_final.md`
+- Latest run snapshot: `output/report_latest.md`
+- Reviewer mapping (feedback -> fix -> evidence): `SUBMISSION_EVIDENCE.md`
+- Future-proof execution checklist: `NEXT_SUBMISSION_INSTRUCTIONS.md`
+- Packaging design log: `design-log/001-submission-packaging.md`
+
+Typical packaging commands:
+```bash
+python3 -m src.main verify-source --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --threshold 60 --limit 20
+python3 -m src.main run --dry-run --lead-source real_csv --candidates-path data/real_linkedin_candidates.csv --threshold 60 --top-n 10 --llm-mode mock
+python3 -m src.main report --run-id <RUN_ID> --output-path output/report_final.md
+```
 
 ## Notes
 
 - Real LinkedIn leads are available via:
   - `--lead-source linkedin_lead_sync` (official LinkedIn marketing lead responses), or
   - `--lead-source third_party_api` (external profile search provider).
+- `scripts/fetch_leads_from_gemini.py` is an idea-generation helper and marks rows as unverified.
 - Personalization can run in `mock` mode or `openai` mode.
 - Official LinkedIn Lead Sync access may require app approval, business verification, and role permissions. The `real_csv` path is provided as a deterministic fallback for assignment review.
